@@ -1,0 +1,1 @@
+archivos .html que definen la estructura de cada vista de la aplicación.
