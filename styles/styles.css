@@ -1,0 +1,171 @@
+/* Estilos generales */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #36393f; /* Color de fondo similar al de Discord */
+    color: #fff; /* Color de texto blanco */
+}
+
+header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: #202225; /* Color de fondo del encabezado */
+    padding: 10px 20px; /* Añadir espacio a los lados */
+}
+
+nav ul {
+    text-align: center;
+    list-style: none;
+    margin: 0; /* Quitar margen */
+    padding: 0; /* Quitar relleno */
+}
+
+nav ul li {
+    display: inline;
+    margin: 0 20px;
+}
+
+nav ul li a {
+    text-decoration: none;
+    color: #fff; /* Color de texto blanco para los enlaces */
+    font-weight: bold;
+}
+
+/* Estilo del logo */
+.logo {
+    display: flex;
+    align-items: center; /* Centra verticalmente el contenido del div.logo */
+}
+
+.logo img {
+    max-width: 25%; /* Tamaño del logo al 25% */
+    height: auto;
+}
+
+/* Estilo de la navegación */
+nav ul {
+    text-align: center;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex; /* Cambia la lista a un flex container */
+    align-items: center; /* Centra verticalmente los elementos de la lista */
+}
+
+nav ul li {
+    margin: 0 20px;
+}
+
+nav ul li a {
+    text-decoration: none;
+    color: #fff;
+    font-weight: bold;
+}
+
+/* Estilos para dispositivos pequeños */
+@media screen and (max-width: 768px) {
+    header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .logo {
+        margin-bottom: 20px;
+    }
+
+    nav ul {
+        flex-direction: column;
+        text-align: left;
+    }
+
+    nav ul li {
+        margin: 10px 0;
+    }
+}
+
+/* Estilos para dispositivos pequeños */
+@media screen and (max-width: 768px) {
+    header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .logo {
+        margin-bottom: 20px;
+    }
+
+    nav ul {
+        flex-direction: column;
+        text-align: left; /* Alinear el texto a la izquierda en dispositivos pequeños */
+    }
+
+    nav ul li {
+        margin: 10px 0; /* Agregar espacio entre elementos en dispositivos pequeños */
+    }
+}
+/* Estilos para la sección de presentación */
+.presentation h1 {
+    font-size: 36px;
+    margin-bottom: 10px;
+}
+
+.presentation h2 {
+    font-size: 24px;
+    margin-top: 20px;
+    margin-bottom: 10px;
+}
+
+/* Estilos para la sección de características */
+.features {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+}
+
+.feature {
+    flex-basis: calc(33.33% - 20px);
+    text-align: center;
+}
+
+.feature img {
+    max-width: 100%;
+    height: auto;
+    margin-bottom: 10px;
+}
+
+/* Media query para dispositivos con un ancho máximo de 768px (tablets y celulares) */
+@media screen and (max-width: 768px) {
+    .features {
+        flex-direction: column; /* Cambia a una sola columna */
+    }
+
+    .feature {
+        flex-basis: auto; /* Ancho automático para ocupar el 100% del contenedor */
+        margin-bottom: 10px;
+    }
+}
+
+/* Estilos para la galería de imágenes */
+.gallery {
+    text-align: center; /* Centra horizontalmente el contenido */   
+    margin-top: 20px;
+}
+
+.gallery img {
+    max-width: 100%;
+    height: auto;
+    margin-bottom: 10px;
+    display: inline-block; /* Alinea la imagen como un bloque en línea */
+}
+
+/* Estilos para el footer */
+footer {
+    text-align: center;
+    background-color: #202225; /* Color de fondo del pie de página */
+    padding: 10px 0;
+    position: bottom;
+    bottom: 0;
+    width: 100%;
+}
