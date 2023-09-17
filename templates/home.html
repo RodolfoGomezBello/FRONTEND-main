@@ -1,0 +1,50 @@
+<!DOCTYPE html5>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home</title>
+    <link rel="stylesheet" href="/styles/homestyles.css">
+</head>
+<body>
+    <header>
+        <h1>Bienvenido: <span id="nombreApellido"></span></h1>
+        <p>Email: <span id="email"></span></p>
+        <button id="logout-button" class="cerrar-btn">Cerrar</button> 
+    </header>
+    <main>
+        <div id="servidoresDiv">
+            <!-- Aquí se mostrarán los servidores -->
+        </div>
+        <div id="canalesDiv">
+            <!-- Aquí se mostrarán los canales -->
+        </div>
+        <div id="mensajesDiv">
+            <!-- Aquí se mostrarán los mensajes -->
+        </div>
+    </main>
+
+    <footer>
+        <p>Desarrollado por Grupo 2 - Programación 2 - UPATECO</p>
+    </footer>
+
+    <script src="/scripts/home.js"></script>
+  
+    <script>
+        // Script para asignar valores iniciales a los atributos "data-servidorid" y "data-canalid"
+        const servidores = document.querySelectorAll('.servidor');
+        const canales = document.querySelectorAll('.canal');
+
+        servidores.forEach((servidor, index) => {
+            servidor.setAttribute('data-servidorid', index + 1); // Comienza en 1
+        });
+
+        canales.forEach((canal, index) => {
+            canal.setAttribute('data-canalid', index + 1); // Comienza en 1
+        });
+    </script>
+
+</body>
+</html>
+
+
