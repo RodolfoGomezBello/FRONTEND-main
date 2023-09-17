@@ -48,6 +48,8 @@ main {
     padding: 20px;
     border: 1px solid #ccc;
     border-radius: 5px;
+    max-height: 75%;
+    overflow-x: auto;
     overflow-y: auto;
 }
 
@@ -86,3 +88,36 @@ footer {
     color: #fff;
 }
 
+/* Estilos para el contenedor de mensajes y el campo de entrada */
+#mensajesDivContainer {
+    display: flex;
+    flex-direction: column;
+}
+
+#enviarMensajeDiv {
+    display: flex;
+    align-items: center;
+}
+
+/* Estilos para el campo de entrada */
+#mensajeInput {
+    flex-grow: 1;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+}
+
+/* Estilos para el botón de enviar */
+#enviarMensajeButton {
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    cursor: pointer;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+#enviarMensajeButton:hover {
+    background-color: #0f0f0f;
+}

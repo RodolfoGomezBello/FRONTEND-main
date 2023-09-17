@@ -1,3 +1,8 @@
+let servidorSeleccionadoElement = null;
+let canalSeleccionadoElement = null;
+let id_servidorSeleccionado = null;
+let emailDelUsuario = '';
+
 
 document.addEventListener("DOMContentLoaded", function () {
     // Obtener los elementos donde mostraremos la información
@@ -6,7 +11,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const servidoresDiv = document.getElementById("servidoresDiv");
     const canalesDiv = document.getElementById("canalesDiv");
     const mensajesDiv = document.getElementById("mensajesDiv");
-    let elementoSeleccionado = null;
+    
 
     // Obtener el botón "Cerrar"
     const logoutButton = document.getElementById("logout-button");
@@ -34,18 +39,22 @@ document.addEventListener("DOMContentLoaded", function () {
     // Event listener para hacer clic en un servidor
     servidoresDiv.addEventListener("click", function (event) {
         if (event.target.classList.contains("servidor")) {
-
-             // Elimina la clase "selected" del elemento anteriormente seleccionado
-            if (elementoSeleccionado) {
-            elementoSeleccionado.classList.remove("selected");
+            // Elimina la clase "selected" del elemento anteriormente seleccionado
+            if (servidorSeleccionadoElement) {
+                servidorSeleccionadoElement.classList.remove("selected");
             }
 
-            const servidorId = event.target.getAttribute("data-servidorid");
-            cargarCanalesYMensajes(servidorId);
+            // Almacena el elemento del servidor seleccionado
+            servidorSeleccionadoElement = event.target;
+
+            // Almacena el id del servidor seleccionado
+            id_servidorSeleccionado = event.target.getAttribute("data-servidorid");
+
+            // Carga los canales y mensajes del servidor seleccionado
+            cargarCanalesYMensajes(id_servidorSeleccionado);
 
             // Agrega la clase "selected" al servidor seleccionado
             event.target.classList.add("selected");
-            elementoSeleccionado = event.target;
         }
     });
 
@@ -53,52 +62,55 @@ document.addEventListener("DOMContentLoaded", function () {
     canalesDiv.addEventListener("click", function (event) {
         if (event.target.classList.contains("canal")) {
             // Elimina la clase "selected" del elemento anteriormente seleccionado
-            if (elementoSeleccionado) {
-                elementoSeleccionado.classList.remove("selected");
+            if (canalSeleccionadoElement) {
+                canalSeleccionadoElement.classList.remove("selected");
             }
-    
+
+            canalSeleccionadoElement = event.target;
+
             const canalId = event.target.getAttribute("data-canalid");
-            const servidorId = servidoresDiv.getAttribute("data-servidorid");
-            // Utiliza el canalId para cargar mensajes del canal seleccionado
-            // Realizar una solicitud para obtener los mensajes del canal seleccionado
-            fetch(`http://127.0.0.1:5000/usuarios/servers/${servidorId + 1}/canales/${canalId}/mensajes`, { method: "GET", credentials: 'include' })
-                .then((response) => response.json())
-                .then(async (data) => {
-                    // Ordenar los mensajes por fecha y hora
-                    data.sort((a, b) => new Date(a.fecha_envio) - new Date(b.fecha_envio));
-    
-                    // Obtener el email del usuario para cada mensaje
-                    for (const mensaje of data) {
-                        const usuarioId = mensaje.usuario_id;
-                        try {
-                            const response = await fetch(`http://127.0.0.1:5000/usuarios/${usuarioId}`, { method: "GET", credentials: 'include' });
-                            if (response.ok) {
-                                const usuarioData = await response.json();
-                                mensaje.email_del_usuario = usuarioData.email;
-                            } else {
-                                console.error("Error al obtener el email del usuario");
+
+            // Utiliza el id_servidorSeleccionado para cargar mensajes del canal seleccionado
+            if (id_servidorSeleccionado) {
+                // Realizar una solicitud para obtener los mensajes del canal seleccionado
+                fetch(`http://127.0.0.1:5000/usuarios/servers/${id_servidorSeleccionado}/canales/${canalId}/mensajes`, { method: "GET", credentials: 'include' })
+                    .then((response) => response.json())
+                    .then(async (data) => {
+                        // Ordenar los mensajes por fecha y hora
+                        data.sort((a, b) => new Date(a.fecha_envio) - new Date(b.fecha_envio));
+
+                        // Obtener el email del usuario para cada mensaje
+                        for (const mensaje of data) {
+                            const usuarioId = mensaje.usuario_id;
+                            try {
+                                const response = await fetch(`http://127.0.0.1:5000/usuarios/${usuarioId}`, { method: "GET", credentials: 'include' });
+                                if (response.ok) {
+                                    const usuarioData = await response.json();
+                                    mensaje.email_del_usuario = usuarioData.email;
+                                } else {
+                                    console.error("Error al obtener el email del usuario");
+                                }
+                            } catch (error) {
+                                console.error("Error al obtener el email del usuario:", error);
                             }
-                        } catch (error) {
-                            console.error("Error al obtener el email del usuario:", error);
                         }
-                    }
-    
-                    // Mostrar los mensajes en mensajesDiv
-                    const mensajesHTML = data.map((mensaje) => {
-                        const fecha = new Date(mensaje.fecha_envio); // Convierte la fecha a un objeto Date
-                        const fechaFormateada = fecha.toLocaleString(); // Formatea la fecha y hora
-                        return `<p><strong>Email del Usuario:</strong> ${mensaje.email_del_usuario} - <strong>Fecha:</strong> ${fechaFormateada} - <strong>Mensaje:</strong> ${mensaje.contenido}</p>`;
-                    }).join("");
-    
-                    mensajesDiv.innerHTML = mensajesHTML;
-                })
-                .catch((error) => {
-                    console.error("Error al cargar mensajes del canal:", error);
-                });
-    
+
+                        // Mostrar los mensajes en mensajesDiv
+                        const mensajesHTML = data.map((mensaje) => {
+                            const fecha = new Date(mensaje.fecha_envio); // Convierte la fecha a un objeto Date
+                            const fechaFormateada = fecha.toLocaleString(); // Formatea la fecha y hora
+                            return `<p><strong>Email del Usuario:</strong> ${mensaje.email_del_usuario} - <strong>Fecha:</strong> ${fechaFormateada} - <strong>Mensaje:</strong> ${mensaje.contenido}</p>`;
+                        }).join("");
+
+                        mensajesDiv.innerHTML = mensajesHTML;
+                    })
+                    .catch((error) => {
+                        console.error("Error al cargar mensajes del canal:", error);
+                    });
+            }
+
             // Agrega la clase "selected" al canal seleccionado
             event.target.classList.add("selected");
-            elementoSeleccionado = event.target;
         }
     });
 
@@ -129,8 +141,8 @@ document.addEventListener("DOMContentLoaded", function () {
         .then((data) => {
             // Mostrar el nombre, apellido y email del usuario
             nombreApellidoElement.textContent = `${data.nombre} ${data.apellido}`;
-            emailElement.textContent = data.email;
-            
+            emailDelUsuario =  data.email;
+
             // Realizar una solicitud para obtener los servidores del usuario
             return fetch("http://127.0.0.1:5000/usuarios/servers", { method: "GET", credentials: 'include' });
         })
@@ -145,4 +157,63 @@ document.addEventListener("DOMContentLoaded", function () {
         .catch((error) => {
             console.error("Error al cargar los datos:", error);
         });
+});
+
+// Obtener el botón "Enviar Mensaje"
+const enviarMensajeButton = document.getElementById("enviarMensajeButton");
+
+// Event listener para enviar un mensaje
+enviarMensajeButton.addEventListener("click", function () {
+    const mensajeInput = document.getElementById("mensajeInput");
+    const mensajeContenido = mensajeInput.value.trim();
+
+    if (mensajeContenido !== "") {
+        // Verifica si hay un servidor seleccionado
+        if (id_servidorSeleccionado !== null) {
+            // Obtener el canal actualmente seleccionado
+            const canalSeleccionado = canalSeleccionadoElement;
+
+            if (canalSeleccionado) {
+                // Si hay un canal seleccionado, obtener su id
+                const canalId = canalSeleccionado.getAttribute("data-canalid");
+                console.log("Contenido de emailElement:",emailDelUsuario);
+                // Antes de enviar el mensaje, se obtiene el "Email del Usuario" localmente
+                //const emailDelUsuario = emailElement.textContent;
+
+                // Crear el objeto de mensaje
+                const nuevoMensaje = {
+                    contenido: mensajeContenido
+                };
+
+                // Realizar una solicitud POST para enviar el mensaje
+                fetch(`http://127.0.0.1:5000/usuarios/servers/${id_servidorSeleccionado}/canales/${canalId}/mensajes`, {
+                    method: "POST",
+                    credentials: 'include',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(nuevoMensaje)
+                })
+                .then((response) => response.json())
+                .then((data) => {
+                    // Agregar el nuevo mensaje al div de mensajes
+                    const fecha = new Date(data.fecha_envio);
+                    const fechaFormateada = fecha.toLocaleString();
+                    const nuevoMensajeHTML = `<p><strong>Email del Usuario:</strong> ${emailDelUsuario} - <strong>Fecha:</strong> ${fechaFormateada} - <strong>Mensaje:</strong> ${data.contenido}</p>`;
+                    mensajesDiv.innerHTML += nuevoMensajeHTML;
+                    
+                    mensajeInput.value = ""; // Limpiar el campo de entrada
+                })
+                .catch((error) => {
+                    console.error("Error al enviar el mensaje:", error);
+                });
+            } else {
+                alert("Por favor, selecciona un canal antes de enviar un mensaje.");
+            }
+        } else {
+            alert("Por favor, selecciona un servidor antes de enviar un mensaje.");
+        }
+    } else {
+        alert("Por favor, escribe un mensaje antes de enviarlo.");
+    }
 });
