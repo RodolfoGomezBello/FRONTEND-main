@@ -141,7 +141,11 @@ document.addEventListener("DOMContentLoaded", function () {
         .then((response) => response.json())
         .then((data) => {
             // Mostrar el nombre, apellido y email del usuario
-            nombreApellidoElement.textContent = `${data.nombre} ${data.apellido}`;
+           // const nombreCapitalizado = data.nombre.charAt(0).toUpperCase() + dataFromBackend.nombre.slice(1);
+            //const apellidoCapitalizado = data.apellido.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');  
+            //const nombreCompleto = nombreCapitalizado + ' ' + apellidoCapitalizado;
+            //nombreApellidoElement.textContent = nombreCompleto
+            nombreApellidoElement.textContent = `${data.nombre.charAt(0).toUpperCase()+data.nombre.slice(1)} ${data.apellido.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ')}`;
             emailDelUsuario =  data.email;
             emailElement.textContent = `${emailDelUsuario}`;
             userId = data.id;
@@ -335,4 +339,72 @@ function cargarServidoresDelUsuario() {
         .catch((error) => {
             console.error("Error al cargar los servidores del usuario:", error);
         });
+}
+
+// Función para cargar los servidores del usuario
+function cargarServidoresDelUsuario() {
+    // Realizar una solicitud para obtener los servidores del usuario
+    fetch("http://127.0.0.1:5000/usuarios/servers", { method: "GET", credentials: 'include' })
+        .then((response) => response.json())
+        .then((data) => {
+            if (data.length === 0) {
+                // Mostrar el mensaje si el usuario no está en ningún servidor
+                servidoresDiv.innerHTML = "<p>AÚN NO SE HA UNIDO A NINGÚN SERVIDOR</p>";
+            } else {
+                // Mostrar los servidores en servidoresDiv
+                const servidoresHTML = data.map((servidor, index) => {
+                    return `<h2 class="servidor" data-servidorid="${index + 1}">${servidor.nombre}</h2>`;
+                });
+                servidoresDiv.innerHTML = servidoresHTML.join("");
+
+                // Actualizar la lista de servidores disponibles (opcional)
+                cargarServidoresDisponibles();
+            }
+        })
+        .catch((error) => {
+            console.error("Error al cargar los servidores del usuario:", error);
+        });
+}
+
+// Función para cargar servidores disponibles
+function cargarServidoresDisponibles() {
+    // Realizar una solicitud para obtener todos los servidores disponibles
+    fetch("http://127.0.0.1:5000/usuarios/servers/all", { method: "GET", credentials: 'include' })
+        .then((response) => response.json())
+        .then((data) => {
+            servidorIds = data.map((servidor) => servidor.id_servidor);
+
+            // Mostrar los servidores disponibles en servidoresDiv
+            const servidoresHTML = data.map((servidor) => {
+                return `<h2 class="servidor servidor-disponible" data-servidorid="${servidor.id_servidor}">${servidor.nombre}</h2>`;
+            });
+
+            servidoresDiv.innerHTML = servidoresHTML.join("");
+
+            // Agregar eventos para mostrar un mensaje al pasar el cursor sobre los servidores
+            const servidoresDisponibles = document.querySelectorAll(".servidor-disponible");
+            servidoresDisponibles.forEach((servidor) => {
+                servidor.addEventListener("mouseover", function () {
+                    servidor.title = "Hacer doble clic para unirse";
+                });
+            });
+        })
+        .catch((error) => {
+            console.error("Error al cargar servidores disponibles:", error);
+        });
+}
+
+// Obtener el botón "Crear Servidor"
+const crearServidorButton = document.getElementById("crearServidorButton");
+
+// Event listener para cargar servidores disponibles al hacer clic en "Unirse a un servidor"
+crearServidorButton.addEventListener("click", function () {
+    cargarServidoresDisponibles();
+});
+
+// Función para actualizar la lista de servidores con el nuevo servidor creado
+function actualizarServidores(nuevoServidor) {
+    // Agregar el nuevo servidor a la lista de servidores
+    servidorIds.push(nuevoServidor.id_servidor);
+    cargarServidoresDelUsuario();
 }

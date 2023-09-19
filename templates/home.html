@@ -41,22 +41,60 @@
     </footer>
 
     <script src="/scripts/home.js"></script>
-  
     <script>
         // Script para asignar valores iniciales a los atributos "data-servidorid" y "data-canalid"
         const servidores = document.querySelectorAll('.servidor');
         const canales = document.querySelectorAll('.canal');
-
+    
         servidores.forEach((servidor, index) => {
             servidor.setAttribute('data-servidorid', index + 1); // Comienza en 1
         });
-
+    
         canales.forEach((canal, index) => {
             canal.setAttribute('data-canalid', index + 1); // Comienza en 1
         });
+    
+        // Obtener el userId del usuario activo
+        //const userId = ObtenerUserId(); // Reemplaza con la forma en que obtienes el userId
+    
+        // Event listener para abrir la ventana de creación de servidor
+        document.getElementById("crearServidorButton").addEventListener("click", function () {
+            // Abrir una nueva ventana para create_server.html
+            const nuevaVentana = window.open(`create_server.html?userId=${userId}`, "_blank", "width=400,height=400");
+    
+            // Event listener para detectar cuando se cierre la nueva ventana
+            nuevaVentana.addEventListener("beforeunload", function () {
+                // Actualizar la lista de servidores del usuario cuando se cierre la nueva ventana
+                cargarServidoresDelUsuario();
+            });
+        });
+    
+        // Función para cargar los servidores a los que se unió el usuario
+        function cargarServidoresDelUsuario() {
+            // Realizar una solicitud para obtener los servidores del usuario
+            fetch("http://127.0.0.1:5000/usuarios/servers", { method: "GET", credentials: 'include' })
+                .then((response) => response.json())
+                .then((data) => {
+                    if (data.length === 0) {
+                        // Mostrar el mensaje si el usuario no está en ningún servidor
+                        servidoresDiv.innerHTML = "<p>AUN NO SE HA UNIDO A NINGÚN SERVIDOR</p>";
+                    } else {
+                        // Mostrar los servidores en servidoresDiv
+                        const servidoresHTML = data.map((servidor, index) => {
+                            return `<h2 class="servidor" data-servidorid="${index + 1}">${servidor.nombre}</h2>`;
+                        });
+                        servidoresDiv.innerHTML = servidoresHTML.join("");
+                    }
+                })
+                .catch((error) => {
+                    console.error("Error al cargar los servidores del usuario:", error);
+                });
+        }
     </script>
 
-</body>
+
+    
+ </body>     
 </html>
 
 

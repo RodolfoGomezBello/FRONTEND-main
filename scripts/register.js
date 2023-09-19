@@ -44,3 +44,22 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 });
+
+// Obtén el elemento select y la imagen de vista previa
+const avatarSelect = document.getElementById('avatar');
+const avatarPreview = document.getElementById('avatar-preview');
+
+// Agrega un evento change al elemento select
+avatarSelect.addEventListener('change', () => {
+    // Obtén la opción seleccionada
+    const selectedOption = avatarSelect.options[avatarSelect.selectedIndex];
+    
+    // Obtén la URL de la imagen del atributo "data-image" de la opción seleccionada
+    const imageUrl = selectedOption.getAttribute('data-image');
+    
+    // Actualiza la fuente de la imagen de vista previa con la URL seleccionada
+    avatarPreview.src = imageUrl;
+    
+    // Muestra la imagen de vista previa (puedes ocultarla inicialmente con CSS si es necesario)
+    avatarPreview.style.display = 'block';
+});

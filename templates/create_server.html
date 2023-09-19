@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crear Servidor</title>
+    <link rel="stylesheet" href="/styles/createserver.css">
+</head>
+<body>
+    <header>
+        <h1>Crear Nuevo Servidor</h1>
+    </header>
+
+    <main>
+        <form id="create-server-form">
+            <label for="nombreServidor">Nombre del Servidor:</label>
+            <input type="text" id="nombreServidor" name="nombreServidor" required>
+
+            <label for="iconoServidor">Icono del Servidor:</label>
+            <select id="iconoServidor" name="iconoServidor">
+                <option value="" data-image="">Selecciona un icono</option>
+                <option value="/assets/icono1.png" data-image="/assets/icono1.png">Word</option>
+                <option value="/assets/icono2.png" data-image="/assets/icono2.png">Profesor</option>
+                <option value="/assets/icono3.png" data-image="/assets/icono3.png">Graduate</option>
+                <option value="/assets/icono4.png" data-image="/assets/icono4.png">Science</option>
+                <option value="/assets/icono5.png" data-image="/assets/icono5.png">SecurityForce</option>
+                <option value="/assets/icono6.png" data-image="/assets/icono6.png">Sport</option>
+            </select>
+            <img id="icono-preview" src="" alt="Vista previa del icono" class="icono-preview">
+            <div id="error-message" class="error-message"></div>
+            <button type="submit">Crear Servidor</button>
+        </form>
+        
+    </main>
+
+
+    <footer>
+        <p>Desarrollado por Grupo 2 - Programación 2 - UPATECO</p>
+    </footer>
+
+   
+    
+    <script>
+        // Obtener el userId de la URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const userId = urlParams.get("userId");
+
+        // Event listener para el envío del formulario
+        document.getElementById("create-server-form").addEventListener("submit", async function (event) {
+    event.preventDefault(); // Evitar el envío del formulario por defecto
+
+    // Obtener los valores del formulario
+    const nombreServidor = document.getElementById("nombreServidor").value;
+    const iconoServidor = document.getElementById("iconoServidor").value;
+
+    // Crear el objeto de servidor
+    const nuevoServidor = {
+        nombre: nombreServidor,
+        propietario_id: userId,
+        icono_serv: iconoServidor,
+    };
+
+    try {
+        const response = await fetch("http://127.0.0.1:5000/usuarios/servers", {
+            method: "POST",
+            credentials: 'include',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(nuevoServidor)
+        });
+
+        if (response.ok) {
+            // El servidor se creó con éxito
+            // Cerrar la ventana actual
+            window.close();
+            // Actualizar la página "home.html"
+            window.opener.location.reload();
+        } else {
+            // Manejar el caso en que la creación del servidor falle
+            const data = await response.json();
+            const errorMessage = document.getElementById("error-message");
+            errorMessage.textContent = data.message; // Muestra el mensaje de error del servidor
+
+            // También puedes aplicar estilos CSS para resaltar el mensaje de error
+            errorMessage.style.color = "red";
+        }
+    } catch (error) {
+        console.error("Error al crear el servidor:", error);
+        alert("Error al crear el servidor.");
+    }
+});
+    </script>
+</body>
+</html>
