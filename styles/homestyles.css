@@ -8,6 +8,21 @@ body {
     overflow-y: scroll; /* Agregar barra de desplazamiento vertical cuando sea necesario */
 }
 
+/* Estilos para el botón "My perfil" */
+.perfil-btn {
+    background-color: #202225;
+    color: #007bff;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    cursor: pointer;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.perfil-btn:hover {
+    background-color: #007bff;
+    color: #0f0f0f;
+}
 /* Estilos para el botón "Cerrar" */
 .cerrar-btn {
     background-color: #202225;

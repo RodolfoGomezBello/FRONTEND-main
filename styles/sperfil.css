@@ -1,0 +1,135 @@
+/* Estilos generales */
+body {
+    margin:0;
+    padding:0;
+}
+
+header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: #1b1f27; 
+    padding: 10px 20px; 
+}
+
+/* Estilo del logo en el header */
+.logo {
+    display: flex;
+    align-items: center;
+}
+
+.logo img {
+    max-width: 200px;
+    height: auto;
+}
+/* Estilos para el fondo de la pagina de visualización/editor de perfil */
+.actualizar-perfil {
+    min-height: 100vh;
+    background-color: #1b1f27;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    padding: 10px;
+}
+/* Estilos para el background de visualización/editor de perfil */
+.actualizar-perfil form {
+    padding: 20px;
+    background-color: #1b1c30;
+    text-align: center;
+    width: 600px;
+    text-align: center;
+    border-radius: 10px;
+    box-shadow: 0 0 6px #4e7eee;
+}
+
+.actualizar-perfil form .flex {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+    gap: 15px;
+}
+/* Tamaño para los inputbox dentro del formulario/perfil */
+.actualizar-perfil form .flex .inputBox {
+    width: 49%;
+}
+/* Estilos de los span */
+.actualizar-perfil form .flex .inputBox span {
+    text-align: left;
+    display: block;
+    margin-top: 15px;
+    font-family: Arial, sans-serif;
+    font-size: 16px;
+    font-weight: bold;
+    color: #fff;
+}
+/* Estilos de los inputbox dentro del formulario/perfil */
+.actualizar-perfil form .flex .inputBox .box {
+    width: 100%;
+    border-radius: 2px;
+    background-color: #252a34;
+    padding: 6px 35px;
+    font-family: Arial, sans-serif;
+    font-size: 17px;
+    color: #fff;
+    margin-top: 10px;
+    border: none;
+    border-bottom: 2px solid #2980B9;
+    outline: 0px;
+}
+#Contraseña_actual::placeholder, #nueva_contraseña::placeholder, #confirmar_contraseña::placeholder {
+    color: #fff;
+}
+
+#avatar{
+    display: inline-flex;
+    height: 20px;
+    border-radius: 8px;
+    border: none;
+    outline: none;
+    appearance: none;
+    padding: 0 20px 0 15px;
+    color: #fff;
+    background-color: #2980B9;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+#avatar:hover{
+    background-color:#2980B9;
+    color: #0f0f0f;
+}
+
+#avatar .option{
+    color: #1b1f27;
+    background-color: #fff;
+}
+.avatar-preview{
+    /* padding-left: 35%; */
+    max-width: 100px;
+    display: none;
+    margin: auto;
+}
+
+/* Estilos para input "Guardar", "Cancelar" */
+.actualizar-perfil form .btn {
+    text-align: left;
+    display: inline-flex;
+    text-decoration: none;
+    font-family: Arial, sans-serif;
+    font-size: 17px;
+    font-weight: bold;
+    border-radius: 20px;
+    padding: 5px 30px;
+    margin-right: 20px;
+    margin-top: 10px;
+    color: #fff;
+    background-color: #4e7eee;
+    border: 2px solid #2980B9;
+    cursor: pointer;
+    box-shadow: 0 0 10px #2980B9;
+}
+.actualizar-perfil form .btn:hover {
+    background-color:#007BFF;
+    color: #1b1f27;
+}

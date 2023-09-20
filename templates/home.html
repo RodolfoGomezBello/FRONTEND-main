@@ -4,12 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Home</title>
-    <link rel="stylesheet" href="/styles/homestyles.css">
+    <link rel="stylesheet" href="../styles/homestyles.css">
 </head>
 <body>
     <header>
         <h1>Bienvenido: <span id="nombreApellido"></span></h1>
         <p>Email: <span id="email"></span></p>
+        <!-- button agregado "my perfil" -->
+        <button id="perfil-button" class="perfil-btn">My perfil</button>
+
         <button id="logout-button" class="cerrar-btn">Cerrar</button> 
     </header>
     <main>
@@ -43,7 +46,7 @@
         <p>Desarrollado por Grupo 2 - Programación 2 - UPATECO</p>
     </footer>
 
-    <script src="/scripts/home.js"></script>
+    <script src="../scripts/home.js"></script>
     <script>
         // Script para asignar valores iniciales a los atributos "data-servidorid" y "data-canalid"
         const servidores = document.querySelectorAll('.servidor');
