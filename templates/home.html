@@ -22,8 +22,11 @@
             <button id="crearServidorButton">Crear un servidor</button>
          </div>
         </div>
-         <div id="canalesDiv">
+        <div id="canalesDivcontainter"> 
+        <div id="canalesDiv">
             <!-- Aquí se mostrarán los canales -->
+        </div>
+           <button id="crearCanalButton">Crear un Canal</button>
         </div>
         <div id="mensajesDivContainer">
             <div id="mensajesDiv">
@@ -68,6 +71,18 @@
                 cargarServidoresDelUsuario();
             });
         });
+
+        // Event listener para abrir la ventana de creación de canal
+         document.getElementById("crearCanalButton").addEventListener("click", function () {
+            // Abrir una nueva ventana para create_chanel.html
+            const nuevaVentana = window.open(`create_chanels.html?userId=${userId}&serverId=${id_servidorSeleccionado}`, "_blank", "width=400,height=400");
+    
+            // Event listener para detectar cuando se cierre la nueva ventana
+            nuevaVentana.addEventListener("beforeunload", function () {
+                // Actualizar la lista de servidores del usuario cuando se cierre la nueva ventana
+                cargarCanalesDelServidor();
+            });
+        });
     
         // Función para cargar los servidores a los que se unió el usuario
         function cargarServidoresDelUsuario() {
@@ -90,6 +105,22 @@
                     console.error("Error al cargar los servidores del usuario:", error);
                 });
         }
+        // Función para cargar los servidores a los que se unió el usuario
+        function cargarCanalesDelServidor() {
+            // Realizar una solicitud para obtener los servidores del usuario
+            fetch(`http://127.0.0.1:5000/usuarios/servers/${servidorId}/canales`, { method: "GET", credentials: 'include' })
+            .then((response) => response.json())
+            .then((data) => {
+                // Mostrar los canales en canalesDiv
+                const canalesHTML = data.map((canal) => {
+                    return `<h2 class="canal" data-canalid="${canal.id_canal}">${canal.nombre}</h2>`;
+                });
+                canalesDiv.innerHTML = canalesHTML.join("");
+            })
+            .catch((error) => {
+                console.error("Error al cargar canales:", error);
+            });
+    }
     </script>
 
 

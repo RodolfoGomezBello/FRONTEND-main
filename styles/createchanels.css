@@ -1,0 +1,71 @@
+/* Estilos para el body */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #36393f;
+    color: #fff;
+}
+
+/* Estilos para el header */
+header {
+    background-color: #202225;
+    padding: 10px 20px;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+/* Estilos para el formulario */
+form {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #202225;
+    border-radius: 10px;
+}
+
+label {
+    display: block;
+    margin-top: 10px;
+}
+
+input, select {
+    width: 100%;
+    padding: 10px;
+    margin-top: 5px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+button {
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    cursor: pointer;
+    margin-top: 15px;
+    width: 100%;
+}
+
+button:hover {
+    background-color: #0f0f0f;
+}
+
+.icono-preview {
+    max-width: 100px;
+    display: none;
+}
+
+/* Estilos para el footer */
+footer {
+    font-size: 12px;
+    height: 20px;
+    line-height: 20px;
+    text-align: center;
+    background-color: #202225;
+    padding: 5px 0;
+    position: fixed;
+    bottom: 0.2%;
+    width: 100%;
+}

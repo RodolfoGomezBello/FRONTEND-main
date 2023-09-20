@@ -4,20 +4,20 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Crear Servidor</title>
-    <link rel="stylesheet" href="/styles/createserver.css">
+    <link rel="stylesheet" href="/styles/createchanels.css">
 </head>
 <body>
     <header>
-        <h1>Crear Nuevo Servidor</h1>
+        <h1>Crear Nuevo Canal</h1>
     </header>
 
     <main>
         <form id="create-server-form">
-            <label for="nombreServidor">Nombre del Servidor:</label>
-            <input type="text" id="nombreServidor" name="nombreServidor" required>
+            <label for="nombreCanal">Nombre del Canal:</label>
+            <input type="text" id="nombreCanal" name="nombreCanal" required>
 
-            <label for="iconoServidor">Icono del Servidor:</label>
-            <select id="iconoServidor" name="iconoServidor">
+            <label for="iconoCanal">Icono del Servidor:</label>
+            <select id="iconoCanal" name="iconoCanal">
                 <option value="" data-image="">Selecciona un icono</option>
                 <option value="/assets/icono1.png" data-image="/assets/icono1.png">Word</option>
                 <option value="/assets/icono2.png" data-image="/assets/icono2.png">Profesor</option>
@@ -28,7 +28,7 @@
             </select>
             <img id="icono-preview" src="" alt="Vista previa del icono" class="icono-preview">
             <div id="error-message" class="error-message"></div>
-            <button type="submit">Crear Servidor</button>
+            <button type="submit">Crear Canal</button>
         </form>
         
     </main>
@@ -44,30 +44,31 @@
         // Obtener el userId de la URL
         const urlParams = new URLSearchParams(window.location.search);
         const userId = urlParams.get("userId");
+        const serverId = urlParams.get("serverId");
 
         // Event listener para el envío del formulario
         document.getElementById("create-server-form").addEventListener("submit", async function (event) {
         event.preventDefault(); // Evitar el envío del formulario por defecto
 
         // Obtener los valores del formulario
-        const nombreServidor = document.getElementById("nombreServidor").value;
-        const iconoServidor = document.getElementById("iconoServidor").value;
+        const nombreCanal = document.getElementById("nombreCanal").value;
+        const iconoCanal = document.getElementById("iconoCanal").value;
 
-        // Crear el objeto de servidor
-        const nuevoServidor = {
-          nombre: nombreServidor,
-          propietario_id: userId,
-          icono_serv: iconoServidor,
+        // Crear el objeto de canal
+        const nuevoCanal = {
+          nombre: nombreCanal,
+          creador_id: userId,
+          icono: iconoCanal,
         };
 
         try {
-          const response = await fetch("http://127.0.0.1:5000/usuarios/servers", {
+          const response = await fetch(`http://127.0.0.1:5000/usuarios/servers/${serverId}/canales`, {
             method: "POST",
             credentials: 'include',
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify(nuevoServidor)
+            body: JSON.stringify(nuevoCanal)
         });
 
         if (response.ok) {
@@ -86,8 +87,8 @@
             errorMessage.style.color = "red";
         }
     } catch (error) {
-        console.error("Error al crear el servidor:", error);
-        alert("Error al crear el servidor.");
+        console.error("Error al crear el Canal:", error);
+        alert("Error al crear el Canal.");
     }
 });
     </script>
