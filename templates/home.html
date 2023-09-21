@@ -8,9 +8,14 @@
 </head>
 <body>
     <header>
+        <div id="avatarDiv" class="avatar-div">
+            <img id="avatarImg" src="" alt="Avatar del usuario">
+            <span id="avatarText" class="avatar-text"></span>
+        </div>
         <h1>Bienvenido: <span id="nombreApellido"></span></h1>
         <p>Email: <span id="email"></span></p>
-        <button id="logout-button" class="cerrar-btn">Cerrar</button> 
+        <button id="editarPerfilBtn" class="editar-btn">Editar Perfil</button>
+        <button id="logout-button" class="cerrar-btn">Cerrar</button>
     </header>
     <main>
         <div id="servidoresDivcontainter">
@@ -48,7 +53,8 @@
         // Script para asignar valores iniciales a los atributos "data-servidorid" y "data-canalid"
         const servidores = document.querySelectorAll('.servidor');
         const canales = document.querySelectorAll('.canal');
-    
+        const editarPerfilBtn = document.getElementById("editarPerfilBtn");
+        
         servidores.forEach((servidor, index) => {
             servidor.setAttribute('data-servidorid', index + 1); // Comienza en 1
         });
@@ -83,6 +89,24 @@
                 cargarCanalesDelServidor();
             });
         });
+
+        editarPerfilBtn.addEventListener("click", function () {
+    // URL de la página de "Editar Perfil" con el userId como parámetro
+    const nuevaVentanaURL = `editar_perfil.html?userId=${userId}`;
+
+    // Ancho y alto de la nueva ventana
+    const ventanaAncho = 400;
+    const ventanaAlto = 400;
+
+    // Abrir la nueva ventana
+    const nuevaVentana = window.open(nuevaVentanaURL, "_blank", `width=${ventanaAncho},height=${ventanaAlto}`);
+
+    // Event listener para detectar cuando se cierre la nueva ventana
+    nuevaVentana.addEventListener("beforeunload", function () {
+        // Realizar acciones cuando se cierre la ventana, como actualizar la información del perfil
+        window.location.reload();
+    });
+});
     
         // Función para cargar los servidores a los que se unió el usuario
         function cargarServidoresDelUsuario() {

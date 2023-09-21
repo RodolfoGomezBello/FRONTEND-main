@@ -149,6 +149,19 @@ document.addEventListener("DOMContentLoaded", function () {
             emailDelUsuario =  data.email;
             emailElement.textContent = `${emailDelUsuario}`;
             userId = data.id;
+            // Obtener la URL del avatar del usuario
+            const avatarUrl = data.avatar; // Asegúrate de que este sea el nombre correcto en tus datos
+            // Obtén la referencia al elemento de imagen del avatar y la leyenda del avatar
+            const avatarImg = document.getElementById("avatarImg");
+            const avatarText = document.getElementById("avatarText");
+            // Actualizar el src de la imagen con la URL del avatar
+            avatarImg.src = avatarUrl;
+            // Verifica si la URL de la imagen del avatar está vacía
+            if (avatarImg.src.trim() === "") {
+               avatarText.textContent = "Elija un Avatar";
+            } else {
+               avatarText.textContent = ""; // Oculta la leyenda si hay una imagen de avatar
+            }
 
             // Realizar una solicitud para obtener los servidores del usuario
             return fetch("http://127.0.0.1:5000/usuarios/servers", { method: "GET", credentials: 'include' });

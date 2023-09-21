@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Perfil</title>
+    <link rel="stylesheet" href="/styles/sperfil.css">
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <img src="/assets/logo.jpg" alt="Logo de tu sitio web">
+        </div>
+    </header>
+    <main>
+        <div class="actualizar-perfil">
+            <form action="" method="post" id="perfilForm">
+                <div class="flex">
+                    <div class="inputBox">
+                        <label for="nombre">Nombre:</label> 
+                        <input type="text" id="nombre" name="nombre" class="box">
+                        <label for="apellido">Apellido:</label> 
+                        <input type="text" id="apellido" name="apellido" class="box">
+                        <label for="fechaNacimiento">Fecha de Nacimiento:</label>
+                        <input type="date" id="fechaNacimiento" name="fechaNacimiento" class="box">
+                        <label for="avatar-select">Avatar (opcional):</label>
+                        <select id="avatar-select" name="avatar">
+                            <option value="" data-image="">Selecciona un avatar</option>
+                            <option value="/assets/avatar1.png" data-image="/assets/avatar1.png">BotMartian</option>
+                            <option value="/assets/avatar2.png" data-image="/assets/avatar2.png">Poketar</option>
+                            <option value="/assets/avatar3.png" data-image="/assets/avatar3.png">AXEDwarf</option>
+                            <option value="/assets/avatar4.png" data-image="/assets/avatar4.png">WarriorGirl</option>
+                            <option value="/assets/avatar5.png" data-image="/assets/avatar5.png">BlueDragon</option>
+                            <option value="/assets/avatar6.png" data-image="/assets/avatar6.png">BlackChef</option>
+                        </select>
+                        <img id="avatar-preview" src="" alt="Vista previa de Avatar" class="avatar-preview">
+                    </div>
+                </div>
+                <input type="submit" class="btn" value="Guardar"></input>
+                
+            </form>
+        </div>
+    </main>
+    <script>
+        // Obtén una referencia al formulario de actualización de perfil
+        const perfilForm = document.getElementById("perfilForm");
+        const urlParams = new URLSearchParams(window.location.search);
+        const userId = urlParams.get("userId");
+
+        // Agrega un evento submit al formulario
+        perfilForm.addEventListener("submit", (event) => {
+            event.preventDefault(); // Evita que el formulario se envíe normalmente
+
+            // Obtén los valores del formulario
+            const nombre = document.getElementById("nombre").value;
+            const apellido = document.getElementById("apellido").value;
+            const fechaNacimiento = document.getElementById("fechaNacimiento").value;
+            const avatarSelect = document.getElementById("avatar-select");
+            const avatarValue = avatarSelect.value; // Obtiene el valor seleccionado
+
+            // Construye un objeto con los datos a enviar
+            const data = {
+                nombre: nombre,
+                apellido: apellido,
+                fecha_nacimiento: fechaNacimiento,
+                avatar: avatarValue
+            };
+
+            // Realiza una solicitud HTTP para actualizar el perfil del usuario
+            fetch(`http://127.0.0.1:5000/usuarios/usuarios`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json' // Especifica que estás enviando JSON
+                },
+                body: JSON.stringify(data),
+                credentials: "include" // Si es necesario para la autenticación
+            })
+            .then((response) => response.json())
+            .then((data) => {
+                if (data.message === "Actualización realizada con éxito") {
+                    // Mostrar un mensaje de éxito
+                    alert("Actualización realizada con éxito");
+
+                    // Cierra la ventana de actualización de perfil
+                    window.close();
+                } else {
+                    //alert("Error al actualizar el perfil: " + data.message);
+                    window.close()
+                }
+            })
+            .catch((error) => {
+                console.error("Error al actualizar el perfil:", error);
+            });
+        });
+
+        fetch(`http://127.0.0.1:5000/usuarios/${userId}`, { method: "GET", credentials: "include" })
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+          }
+          return response.json();
+        })
+        .then((data) => {
+          if (data) {
+            // Llena el formulario con los datos del usuario
+            document.getElementById("nombre").value = data.nombre;
+            document.getElementById("apellido").value = data.apellido;
+            document.getElementById("fechaNacimiento").value = data.fecha_nacimiento;
+            
+            // Puedes cargar la imagen del avatar si está disponible en los datos del usuario
+            if (data.avatar) {
+                const avatarPreview = document.getElementById("avatar-preview");
+                avatarPreview.src = data.avatar;
+            }
+          }
+        })
+        .catch((error) => {
+          console.error("Error al obtener los datos del usuario:", error);
+        });
+    </script>
+</body>
+</html>
