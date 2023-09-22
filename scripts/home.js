@@ -311,32 +311,17 @@ function crearBotonesEdicionYEliminacion(mensajeId, esPropietario) {
 
 // Event listener para hacer clic en un mensaje
 mensajesDiv.addEventListener("click", function (event) {
-    if (event.target.classList.contains("mensaje")) {
-        // Elimina la clase "selected" del elemento anteriormente seleccionado
-        const mensajeSeleccionadoAnterior = document.querySelector(".mensaje.selected");
-        if (mensajeSeleccionadoAnterior) {
-            mensajeSeleccionadoAnterior.classList.remove("selected");
-        }
+    const mensajeSeleccionado = event.target.closest(".mensaje");
 
-        // Almacena el elemento del mensaje seleccionado
-        const mensajeSeleccionado = event.target;
-
-        // Almacena el id del mensaje seleccionado
+    if (mensajeSeleccionado) {
         const mensajeId = mensajeSeleccionado.getAttribute("data-mensajeid");
+        const esPropietario = mensajeSeleccionado.getAttribute("data-propietario") === "true";
 
-        // Almacena el usuario_id del mensaje seleccionado
-        userIDmensaje = mensajeSeleccionado.getAttribute("data-usuarioid");
+        // Elimina los botones de edición y eliminación de todos los mensajes
+        eliminarBotonesEdicionYEliminacion();
 
-        // Verifica si el usuario actual es propietario del mensaje
-        const esPropietario = userId === userIDmensaje;
-
-        // Agrega la clase "selected" al mensaje seleccionado
-        mensajeSeleccionado.classList.add("selected");
-
-        // Crea botones de edición y eliminación para el mensaje seleccionado
+        // Crea botones de edición y eliminación solo para el mensaje seleccionado
         const botonesDiv = crearBotonesEdicionYEliminacion(mensajeId, esPropietario);
-
-        // Agrega los botones al mensaje seleccionado
         mensajeSeleccionado.appendChild(botonesDiv);
     }
 });
