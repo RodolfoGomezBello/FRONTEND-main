@@ -1,6 +1,7 @@
 let servidorSeleccionadoElement = null;
 let canalSeleccionadoElement = null;
 let id_servidorSeleccionado = null;
+let id_canalSeleccionado = null;
 let emailDelUsuario = '';
 let usuarioEnServidor = false;
 let servidorIds = [];
@@ -8,6 +9,11 @@ let userId=null
 let userIDmensaje=null;
 let mensajeSeleccionadoId = null;
 let botonesDiv = null;
+let mensajeIdSeleccionado = null;
+let usuarioIdSeleccionado = null;
+let mensajesTabla = {};
+let Mensajote={};
+let contenidoSeleccionado='';
 
 document.addEventListener("DOMContentLoaded", function () {
     // Obtener los elementos donde mostraremos la información
@@ -71,7 +77,7 @@ document.addEventListener("DOMContentLoaded", function () {
             }
 
             canalSeleccionadoElement = event.target;
-
+            id_canalSeleccionado= event.target.getAttribute("data-canalid");
             const canalId = event.target.getAttribute("data-canalid");
 
             // Utiliza el id_servidorSeleccionado para cargar mensajes del canal seleccionado
@@ -82,10 +88,16 @@ document.addEventListener("DOMContentLoaded", function () {
                     .then(async (data) => {
                         // Ordenar los mensajes por fecha y hora
                         data.sort((a, b) => new Date(a.fecha_envio) - new Date(b.fecha_envio));
-
+                        // Actualizar mensajesTabla con los nuevos datos
+                        data.forEach((mensaje) => {
+                            mensajesTabla[mensaje.id_mensaje] = mensaje.usuario_id;
+                            console.log(`Mensaje ID: ${mensaje.id_mensaje}, Usuario ID: ${mensaje.usuario_id}`);
+                        });
                         // Obtener el email del usuario para cada mensaje
                         for (const mensaje of data) {
                             const usuarioId = mensaje.usuario_id;
+                            // Agregar el mensaje y el usuario a la tabla
+                            //mensajesTabla[mensaje.id] = usuarioId;
                             try {
                                 const response = await fetch(`http://127.0.0.1:5000/usuarios/${usuarioId}`, { method: "GET", credentials: 'include' });
                                 if (response.ok) {
@@ -104,7 +116,7 @@ document.addEventListener("DOMContentLoaded", function () {
                             const fecha = new Date(mensaje.fecha_envio); // Convierte la fecha a un objeto Date
                             const fechaFormateada = fecha.toLocaleString(); // Formatea la fecha y hora
                             //return `<p><strong>Email del Usuario:</strong> ${mensaje.email_del_usuario} - <strong>Fecha:</strong> ${fechaFormateada} - <strong>Mensaje:</strong> ${mensaje.contenido}</p>`;
-                            return `<p class="mensaje" data-mensajeid="${mensaje.id}"><strong>Email del Usuario:</strong> ${mensaje.email_del_usuario} - <strong>Fecha:</strong> ${fechaFormateada} - <strong>Mensaje:</strong> ${mensaje.contenido}</p>`;
+                            return `<p class="mensaje" data-id_mensaje="${mensaje.id_mensaje}"><strong>Email del Usuario:</strong> ${mensaje.email_del_usuario} - <strong>Fecha:</strong> ${fechaFormateada} - <strong>Mensaje:</strong> ${mensaje.contenido}</p>`;
                         }).join("");
 
                         mensajesDiv.innerHTML = mensajesHTML;
@@ -248,80 +260,24 @@ enviarMensajeButton.addEventListener("click", function () {
 });
 
 //comienza aqui
-// Función para crear botones de edición y eliminación de mensajes
-function crearBotonesEdicionYEliminacion(mensajeId, esPropietario) {
-    // Crear elementos de botones
-    const editarButton = document.createElement("button");
-    const eliminarButton = document.createElement("button");
-
-    // Asignar clases y texto a los botones
-    editarButton.className = "editar-btn";
-    editarButton.textContent = "Editar";
-    eliminarButton.className = "eliminar-btn";
-    eliminarButton.textContent = "Eliminar";
-
-    // Event listener para el botón de edición
-    editarButton.addEventListener("click", function () {
-        if (esPropietario) {
-            // Obtener el mensaje seleccionado y mostrarlo en el campo de entrada
-            const mensajeSeleccionado = document.querySelector(".mensaje.selected");
-            const mensajeContenido = mensajeSeleccionado.querySelector(".mensaje-contenido").textContent;
-            mensajeInput.value = mensajeContenido;
-        } else {
-            alert("Usted no escribió este mensaje.");
-        }
-    });
-
-    // Event listener para el botón de eliminación
-    eliminarButton.addEventListener("click", function () {
-        if (esPropietario) {
-            // Realizar la solicitud para eliminar el mensaje
-            fetch(`http://127.0.0.1:5000/usuarios/servers/${id_servidorSeleccionado}/canales/${canalId}/mensajes/${mensajeId}`, {
-                method: "DELETE",
-                credentials: 'include'
-            })
-            .then((response) => response.json())
-            .then((data) => {
-                if (data.message === "Mensaje eliminado con éxito") {
-                    // Eliminar el mensaje del DOM
-                    const mensajeSeleccionado = document.querySelector(".mensaje.selected");
-                    mensajeSeleccionado.remove();
-                } else {
-                    alert("Error al eliminar el mensaje. Por favor, inténtelo de nuevo.");
-                }
-            })
-            .catch((error) => {
-                console.error("Error al eliminar el mensaje:", error);
-                alert("Error al eliminar el mensaje. Por favor, inténtelo de nuevo.");
-            });
-        } else {
-            alert("Usted no es propietario de este mensaje.");
-        }
-    });
-
-    // Crear un div para contener los botones y agregarlos
-    const botonesDiv = document.createElement("div");
-    botonesDiv.className = "mensaje-buttons";
-    botonesDiv.appendChild(editarButton);
-    botonesDiv.appendChild(eliminarButton);
-
-    return botonesDiv;
-}
-
-
-// Event listener para hacer clic en un mensaje
+// Agregar un evento click al contenedor de mensajes
 mensajesDiv.addEventListener("click", function (event) {
     const mensajeSeleccionado = event.target.closest(".mensaje");
+    console.log(mensajeSeleccionado);
+    Mensajote = mensajeSeleccionado;
 
     if (mensajeSeleccionado) {
-        const mensajeId = mensajeSeleccionado.getAttribute("data-mensajeid");
+        const mensajeIdSeleccionado = parseInt(mensajeSeleccionado.getAttribute("data-id_mensaje"), 10);
+        const usuarioIdSeleccionado = mensajesTabla[mensajeIdSeleccionado];
         const esPropietario = mensajeSeleccionado.getAttribute("data-propietario") === "true";
-
-        // Elimina los botones de edición y eliminación de todos los mensajes
+        console.log(mensajeIdSeleccionado);
+        console.log(usuarioIdSeleccionado);
+        console.log(esPropietario);
+        // Eliminar los botones de edición y eliminación de todos los mensajes
         eliminarBotonesEdicionYEliminacion();
 
-        // Crea botones de edición y eliminación solo para el mensaje seleccionado
-        const botonesDiv = crearBotonesEdicionYEliminacion(mensajeId, esPropietario);
+        // Crear botones de edición y eliminación solo para el mensaje seleccionado
+        const botonesDiv = crearBotonesEdicionYEliminacion(mensajeIdSeleccionado, esPropietario);
         mensajeSeleccionado.appendChild(botonesDiv);
     }
 });
@@ -337,6 +293,115 @@ function eliminarBotonesEdicionYEliminacion() {
             botonesDiv.remove();
         }
     });
+}
+
+// Función para crear botones de edición y eliminación de mensajes
+function crearBotonesEdicionYEliminacion(mensajeId, esPropietario) {
+    const editarButton = document.createElement("button");
+    const eliminarButton = document.createElement("button");
+
+    // Asignar clases y texto a los botones
+    editarButton.className = "editar-btn";
+    editarButton.textContent = "Editar";
+    eliminarButton.className = "eliminar-btn";
+    eliminarButton.textContent = "Eliminar";
+
+    // Event listener para el botón de edición
+    // Event listener para el botón de edición
+editarButton.addEventListener("click", function () {
+    if (mensajeSeleccionado) {
+        const idUsuarioDelMensaje = mensajesTabla[mensajeId];
+
+        if (userId === idUsuarioDelMensaje) {
+            // El usuario activo es el propietario del mensaje
+            // Implementa la lógica para editar el mensaje aquí
+
+            // Obtén el contenido actual del mensaje
+            const mensajeContenidoElement = mensajeSeleccionado.querySelector("strong:last-of-type + strong");
+            const mensajeContenido = mensajeContenidoElement.textContent.trim();
+
+            // Pide al usuario que ingrese el nuevo contenido del mensaje
+            const nuevoContenido = prompt("Editar mensaje:", mensajeContenido);
+
+            if (nuevoContenido !== null) {
+                // Actualiza el contenido del mensaje en el DOM
+                mensajeContenidoElement.textContent = nuevoContenido;
+
+                // Realiza una solicitud al servidor para actualizar el mensaje
+                const mensajeIdSeleccionado = parseInt(mensajeSeleccionado.getAttribute("data-id_mensaje"), 10);
+                const canalIdSeleccionado = parseInt(canalSeleccionadoElement.getAttribute("data-canalid"), 10);
+
+                fetch(`http://127.0.0.1:5000/usuarios/servers/${id_servidorSeleccionado}/canales/${canalIdSeleccionado}/mensajes/${mensajeIdSeleccionado}`, {
+                    method: "PUT",
+                    credentials: 'include',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ contenido: nuevoContenido })
+                })
+                .then((response) => response.json())
+                .then((data) => {
+                    if (data.message === "Mensaje actualizado exitosamente") {
+                        alert("Mensaje actualizado exitosamente.");
+                    } else {
+                        alert("Error al actualizar el mensaje.");
+                    }
+                })
+                .catch((error) => {
+                    console.error("Error al actualizar el mensaje:", error);
+                    alert("Error al actualizar el mensaje. Por favor, inténtelo de nuevo.");
+                });
+            }
+        } else {
+            alert("Usted no es el propietario de este mensaje.");
+        }
+    } else {
+        alert("No se ha seleccionado ningún mensaje para editar.");
+    }
+});
+
+    // Event listener para el botón de eliminación
+    eliminarButton.addEventListener("click", function () {
+        const mensajeSeleccionado = Mensajote; 
+    
+        if (mensajeSeleccionado) {
+            const idUsuarioDelMensaje = mensajesTabla[mensajeId];
+    
+            if (userId === idUsuarioDelMensaje) {
+                // El usuario activo es el propietario del mensaje
+                // Implementa la lógica para eliminar el mensaje aquí
+                fetch(`http://127.0.0.1:5000/usuarios/servers/${id_servidorSeleccionado}/canales/${id_canalSeleccionado}/mensajes/${mensajeId}`, {
+                    method: "DELETE",
+                    credentials: 'include'
+                })
+                .then((response) => response.json())
+                .then((data) => {
+                    if (data.message === "Mensaje eliminado exitosamente") {
+                        // Eliminar el mensaje del DOM
+                        mensajeSeleccionado.remove();
+                    } else {
+                        alert("No tienes permiso para borrar este mensaje o ha pasado más de 1 minuto");
+                    }
+                })
+                .catch((error) => {
+                    console.error("Error al eliminar el mensaje:", error);
+                    alert("Error al eliminar el mensaje. Por favor, inténtelo de nuevo.");
+                });
+            } else {
+                alert("Usted no es el propietario de este mensaje.");
+            }
+        } else {
+            alert("No se ha seleccionado ningún mensaje para eliminar.");
+        }
+    });
+
+    // Crear un div para contener los botones y agregarlos
+    const botonesDiv = document.createElement("div");
+    botonesDiv.className = "mensaje-buttons";
+    botonesDiv.appendChild(editarButton);
+    botonesDiv.appendChild(eliminarButton);
+
+    return botonesDiv;
 }
 //termina aqui
 // Event listener para abrir la ventana de unirse a un servidor
