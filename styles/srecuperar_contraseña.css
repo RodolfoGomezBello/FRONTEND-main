@@ -1,0 +1,118 @@
+/* Estilos generales */
+body {
+    font-family: Arial, sans-serif;
+    background: linear-gradient(to top, #b0b4bc, #333); /* Cambia los colores degradados según tu preferencia */
+    margin: 0;
+    padding: 0;
+    min-height: 100vh; /* Esto asegura que el fondo se extienda hasta el final de la página */
+    display: flex;
+    flex-direction: column;
+}
+
+header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: #202225; /* Color de fondo del encabezado */
+    padding: 10px 20px; /* Añadir espacio a los lados */
+}
+
+a {
+    text-decoration: none;
+    color: #fff; /* Color de texto blanco para los enlaces */
+    font-weight: bold;
+}
+
+/* Estilo del logo en el header */
+.logo img {
+    max-width: 25%; /* Tamaño del logo al 25% */
+    height: auto;
+}
+
+main {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+/* Estilos del contenedor del formulario */
+.login-container {
+    background-color: #202225;
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);
+    color: #fff;
+}
+
+.login-container h1 {
+    font-size: 24px;
+    margin-bottom: 20px;
+}
+
+/* Estilos del formulario */
+form {
+    text-align: center;
+    color: #fff;
+}
+
+label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+
+
+input[type="text"],
+input[type="password"] {
+    width: 50%; 
+    padding: 10px;
+    margin: 0 auto; 
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+    text-align: center; 
+   
+}
+
+.forgot-password {
+    text-align: right;
+    margin-bottom: 15px;
+}
+
+.forgot-password a {
+    text-decoration: none;
+    color: #007BFF;
+}
+
+
+
+/* Estilo del botón */
+#submit{
+    background-color: #202225;
+    color: #007bff;
+    border: none;
+    border-radius: 5px; /* Bordes redondeados */
+    padding: 10px 20px;
+    cursor: pointer;
+    transition: background-color 0.3s, color 0.3s; /* Transición suave de color */
+}
+
+/* Cambia el estilo al pasar el mouse */
+#submit:hover {
+    background-color: #007bff; /* Fondo gris oscuro al pasar el mouse */
+    color: #0f0f0f; /* Texto negro al pasar el mouse */
+}
+
+/* Estilos para el footer */
+footer {
+    text-align: center;
+    background-color: #202225; /* Color de fondo del pie de página */
+    padding: 10px 0;
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    color: #fff;
+}
+   

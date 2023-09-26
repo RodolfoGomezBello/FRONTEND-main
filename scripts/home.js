@@ -306,60 +306,81 @@ function crearBotonesEdicionYEliminacion(mensajeId, esPropietario) {
     eliminarButton.className = "eliminar-btn";
     eliminarButton.textContent = "Eliminar";
 
-    // Event listener para el botón de edición
-    // Event listener para el botón de edición
-editarButton.addEventListener("click", function () {
+   
+// Event listener para el botón de edición
+editarButton.addEventListener("click", async function () {
+    const mensajeSeleccionado = Mensajote;
+
     if (mensajeSeleccionado) {
-        const idUsuarioDelMensaje = mensajesTabla[mensajeId];
+        const mensajeIdSeleccionado = parseInt(mensajeSeleccionado.getAttribute("data-id_mensaje"), 10);
+        const idUsuarioDelMensaje = mensajesTabla[mensajeIdSeleccionado];
 
         if (userId === idUsuarioDelMensaje) {
             // El usuario activo es el propietario del mensaje
-            // Implementa la lógica para editar el mensaje aquí
-
-            // Obtén el contenido actual del mensaje
-            const mensajeContenidoElement = mensajeSeleccionado.querySelector("strong:last-of-type + strong");
-            const mensajeContenido = mensajeContenidoElement.textContent.trim();
-
-            // Pide al usuario que ingrese el nuevo contenido del mensaje
-            const nuevoContenido = prompt("Editar mensaje:", mensajeContenido);
-
-            if (nuevoContenido !== null) {
-                // Actualiza el contenido del mensaje en el DOM
-                mensajeContenidoElement.textContent = nuevoContenido;
-
-                // Realiza una solicitud al servidor para actualizar el mensaje
-                const mensajeIdSeleccionado = parseInt(mensajeSeleccionado.getAttribute("data-id_mensaje"), 10);
-                const canalIdSeleccionado = parseInt(canalSeleccionadoElement.getAttribute("data-canalid"), 10);
-
-                fetch(`http://127.0.0.1:5000/usuarios/servers/${id_servidorSeleccionado}/canales/${canalIdSeleccionado}/mensajes/${mensajeIdSeleccionado}`, {
-                    method: "PUT",
-                    credentials: 'include',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ contenido: nuevoContenido })
-                })
-                .then((response) => response.json())
-                .then((data) => {
-                    if (data.message === "Mensaje actualizado exitosamente") {
-                        alert("Mensaje actualizado exitosamente.");
-                    } else {
-                        alert("Error al actualizar el mensaje.");
-                    }
-                })
-                .catch((error) => {
-                    console.error("Error al actualizar el mensaje:", error);
-                    alert("Error al actualizar el mensaje. Por favor, inténtelo de nuevo.");
+            try {
+                // Realiza una solicitud GET al servidor para obtener el contenido del mensaje
+                const response = await fetch(`http://127.0.0.1:5000/usuarios/servers/${id_servidorSeleccionado}/canales/${id_canalSeleccionado}/mensajes/${mensajeIdSeleccionado}`, {
+                    method: "GET",
+                    credentials: 'include'
                 });
+
+                if (response.ok) {
+                    const data = await response.json();
+
+                    if (data.contenido) {
+                        // Obtén el contenido actual del mensaje
+                        const mensajeContenidoElement = mensajeSeleccionado.querySelector("strong:last-of-type + strong");
+                        console.log(mensajeContenidoElement);
+                        const mensajeContenido = data.contenido;
+                        console.log(mensajeContenido)
+
+                        // Pide al usuario que ingrese el nuevo contenido del mensaje
+                        const nuevoContenido = prompt("Editar mensaje:", mensajeContenido);
+
+                        if (nuevoContenido !== null) {
+                            // Actualiza el contenido del mensaje en el DOM
+                            //mensajeContenidoElement = nuevoContenido;
+
+                            // Realiza una solicitud al servidor para actualizar el mensaje
+                            const canalIdSeleccionado = parseInt(canalSeleccionadoElement.getAttribute("data-canalid"), 10);
+
+                            const mensajeActualizado = {
+                                contenido: nuevoContenido,
+                            };
+
+                            const actualizarResponse = await fetch(`http://127.0.0.1:5000/usuarios/servers/${id_servidorSeleccionado}/canales/${canalIdSeleccionado}/mensajes/${mensajeIdSeleccionado}`, {
+                                method: "PUT",
+                                credentials: "include",
+                                headers: {
+                                    "Content-Type": "application/json",
+                                },
+                                body: JSON.stringify(mensajeActualizado),
+                            });
+
+                            if (actualizarResponse.ok) {
+                                alert("Mensaje actualizado exitosamente.");
+                            } else {
+                                alert("Error al actualizar el mensaje.");
+                            }
+                        }
+                    } else {
+                        alert("No se pudo obtener el contenido del mensaje desde el servidor.");
+                    }
+                } else {
+                    console.error("Error al obtener el contenido del mensaje:", response.statusText);
+                    alert("Error al obtener el contenido del mensaje desde el servidor.");
+                }
+            } catch (error) {
+                console.error("Error general:", error);
+                alert("Error al realizar la edición del mensaje. Por favor, inténtelo de nuevo.");
             }
         } else {
-            alert("Usted no es el propietario de este mensaje.");
+            alert("Usted no es el propietario de este mensaje y no tiene permiso para editarlo.");
         }
     } else {
         alert("No se ha seleccionado ningún mensaje para editar.");
     }
 });
-
     // Event listener para el botón de eliminación
     eliminarButton.addEventListener("click", function () {
         const mensajeSeleccionado = Mensajote; 
