@@ -1,26 +1,42 @@
 
-document.getElementById('forgotPasswordForm').addEventListener('submit', function(event) {
-    event.preventDefault();
-    const email = document.getElementById('email').value;
-
-    // Enviar una solicitud al servidor para recuperar la contraseña
-    fetch('/recovery_password', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ email })
+// Función para enviar la solicitud POST al endpoint de recuperación de contraseña
+function forgotPassword(event) {
+    event.preventDefault(); // Evita que se envíe el formulario de forma tradicional
+    
+    const email = document.getElementById('email').value; // Obtén el valor del campo de correo electrónico
+  
+    // Crear un objeto de datos para enviar en la solicitud POST
+    const data = {
+      email: email
+    };
+  
+    // Realizar la solicitud POST usando fetch
+    fetch('http://127.0.0.1:5000/usuarios/forgot_password', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(data)
     })
-    .then(response => response.json())
+    .then(response => {
+      if (response.ok) {
+        return response.json();
+      } else {
+        throw new Error('No se pudo enviar la nueva contraseña por correo electrónico');
+      }
+    })
     .then(data => {
-        if (data.success) {
-            alert('Se ha enviado una nueva contraseña por correo electrónico.');
-        } else {
-            alert('No se pudo procesar la solicitud. Verifique su correo electrónico.');
-        }
+     
+      console.log(data.message);
+      window.location.href = 'login.html';
     })
     .catch(error => {
-        console.error('Error al procesar la solicitud:', error);
-        alert('Ha ocurrido un error al procesar la solicitud. Por favor, inténtelo de nuevo.');
+      
+      console.error(error.message);
     });
-});
+  }
+  
+  // Agregar un evento al formulario de recuperación de contraseña
+  const forgotPasswordForm = document.getElementById('forgotPasswordForm');
+  forgotPasswordForm.addEventListener('submit', forgotPassword);
+  

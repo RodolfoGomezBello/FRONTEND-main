@@ -35,8 +35,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 window.location.href = 'login.html';
             } else {
                 const data = await response.json();
-                // Muestra un mensaje de error al usuario, por ejemplo, en un elemento HTML
-                // con id "error-message".
+                
                 document.getElementById('error-message').textContent = data.error;
             }
         } catch (error) {

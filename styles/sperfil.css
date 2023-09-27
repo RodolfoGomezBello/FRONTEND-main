@@ -133,3 +133,32 @@ header {
     background-color:#007BFF;
     color: #1b1f27;
 }
+
+/* Estilos para el campo de contraseña */
+.actualizar-perfil form .flex .inputBox label[for="contrasena"] {
+    text-align: left;
+    display: block;
+    margin-top: 15px;
+    font-family: Arial, sans-serif;
+    font-size: 16px;
+    font-weight: bold;
+    color: #fff;
+}
+
+.actualizar-perfil form .flex .inputBox #contrasena {
+    width: 100%;
+    border-radius: 2px;
+    background-color: #252a34;
+    padding: 6px 35px;
+    font-family: Arial, sans-serif;
+    font-size: 17px;
+    color: #fff;
+    margin-top: 10px;
+    border: none;
+    border-bottom: 2px solid #2980B9;
+    outline: 0px;
+}
+
+#contrasena::placeholder {
+    color: #fff;
+}

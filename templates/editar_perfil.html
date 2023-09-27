@@ -23,6 +23,8 @@
                         <input type="text" id="apellido" name="apellido" class="box">
                         <label for="fechaNacimiento">Fecha de Nacimiento:</label>
                         <input type="date" id="fechaNacimiento" name="fechaNacimiento" class="box">
+                        <label for="contrasena">Contraseña:</label>
+                        <input type="password" id="contrasena" name="contrasena" class="box">
                         <label for="avatar-select">Avatar (opcional):</label>
                         <select id="avatar-select" name="avatar">
                             <option value="" data-image="">Selecciona un avatar</option>
@@ -55,6 +57,7 @@
             const nombre = document.getElementById("nombre").value;
             const apellido = document.getElementById("apellido").value;
             const fechaNacimiento = document.getElementById("fechaNacimiento").value;
+            const contrasena = document.getElementById("contrasena").value;
             const avatarSelect = document.getElementById("avatar-select");
             const avatarValue = avatarSelect.value; // Obtiene el valor seleccionado
 
@@ -62,6 +65,7 @@
             const data = {
                 nombre: nombre,
                 apellido: apellido,
+                contraseña: contrasena,
                 fecha_nacimiento: fechaNacimiento,
                 avatar: avatarValue
             };
@@ -106,7 +110,7 @@
             document.getElementById("nombre").value = data.nombre;
             document.getElementById("apellido").value = data.apellido;
             document.getElementById("fechaNacimiento").value = data.fecha_nacimiento;
-            
+            document.getElementById("contrasena").value = data.contraseña;
             // Puedes cargar la imagen del avatar si está disponible en los datos del usuario
             if (data.avatar) {
                 const avatarPreview = document.getElementById("avatar-preview");
