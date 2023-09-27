@@ -135,11 +135,16 @@
             fetch(`http://127.0.0.1:5000/usuarios/servers/${servidorId}/canales`, { method: "GET", credentials: 'include' })
             .then((response) => response.json())
             .then((data) => {
+                if (data.length === 0) {
+                        // Mostrar el mensaje si el servidor no tiene  ningún canal
+                        canalesDiv.innerHTML = "<p>AUN NO SE HAN CREADO CANALES EN ESTE SERVIDOR </p>";
+                } else {
                 // Mostrar los canales en canalesDiv
                 const canalesHTML = data.map((canal) => {
                     return `<h2 class="canal" data-canalid="${canal.id_canal}">${canal.nombre}</h2>`;
                 });
                 canalesDiv.innerHTML = canalesHTML.join("");
+            }
             })
             .catch((error) => {
                 console.error("Error al cargar canales:", error);
